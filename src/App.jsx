@@ -136,7 +136,6 @@ function App() {
     }
 
     const isOverlap = checkScheduleOverlap(newCourier, couriers);
-    console.log(isOverlap);
 
     // Check the result
     if (isOverlap) {
