@@ -75,36 +75,43 @@ function App() {
     }
   };
 
-  // ==========================================
-  function checkScheduleOverlap(newCourier, couriers) {
-    for (const existingCourier of couriers) {
-      if (
-        existingCourier.courier === newCourier.courier &&
-        ((existingCourier.startdate <= newCourier.startDate &&
-          newCourier.startDate < existingCourier.enddate) ||
-          (newCourier.startDate <= existingCourier.startdate &&
-            existingCourier.startdate < newCourier.endDate)) &&
-        ((existingCourier.starttime <= newCourier.startTime &&
-          newCourier.startTime < existingCourier.endtime) ||
-          (newCourier.startTime <= existingCourier.starttime &&
-            existingCourier.starttime < newCourier.endTime))
-        
+  function checkScheduleOverlap(
+    newCourierName,
+    newCourierStartDate,
+    newCourierStartTime,
+    newCourierEndDate,
+    newCourierEndTime
+  ) {
+    // Convert the new courier's start and end times to Date objects
+    const newCourierStartTimeObj = new Date(
+      `${newCourierStartDate}T${newCourierStartTime}`
+    );
+    const newCourierEndTimeObj = new Date(
+      `${newCourierEndDate}T${newCourierEndTime}`
+    );
 
-        // existingCourier.courier === newCourier.courier &&
-        // existingCourier.startdate === newCourier.startDate &&
-        // existingCourier.enddate === newCourier.endDate &&
-        // ((existingCourier.starttime <= newCourier.startTime &&
-        //   newCourier.startTime < existingCourier.endtime) ||
-        //   (newCourier.startTime <= existingCourier.starttime &&
-        //     existingCourier.starttime < newCourier.endTime))
-      ) {
-        // If there's an overlap, return false
-        return false;
+    for (const existingCourier of couriers) {
+      if (existingCourier.courier === newCourierName) {
+        // Convert the existing courier's start and end times to Date objects
+        const existingCourierStartTimeObj = new Date(
+          `${existingCourier.startdate}T${existingCourier.starttime}`
+        );
+        const existingCourierEndTimeObj = new Date(
+          `${existingCourier.enddate}T${existingCourier.endtime}`
+        );
+
+        // Check for overlap between the existing courier and the new courier
+        if (
+          // existingCourier.destination === destination &&
+          existingCourierStartTimeObj < newCourierEndTimeObj &&
+          newCourierStartTimeObj < existingCourierEndTimeObj
+        ) {
+          return false; // overlap detected
+        }
       }
     }
 
-    // If there's no overlap, return true
-    return true;
+    return true; // no overlap detected
   }
 
   // =============================
@@ -146,7 +153,14 @@ function App() {
       return toast.error("End time must be bigger then start time");
     }
 
-    const isOverlap = checkScheduleOverlap(newCourier, couriers);
+    // const isOverlap = checkScheduleOverlap(newCourier, couriers);
+    const isOverlap = checkScheduleOverlap(
+      newCourier.courier,
+      newCourier.startDate,
+      newCourier.startTime,
+      newCourier.endDate,
+      newCourier.endTime
+    );
 
     // Check the result
     if (isOverlap) {
