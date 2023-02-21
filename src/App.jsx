@@ -102,7 +102,6 @@ function App() {
 
         // Check for overlap between the existing courier and the new courier
         if (
-          // existingCourier.destination === destination &&
           existingCourierStartTimeObj < newCourierEndTimeObj &&
           newCourierStartTimeObj < existingCourierEndTimeObj
         ) {
