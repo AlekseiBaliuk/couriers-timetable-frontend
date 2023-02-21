@@ -53,7 +53,7 @@ function App() {
     async function getData() {
       try {
         const data = await fetchData();
-        setCouriers([...data]);
+        setCouriers(data);
       } catch (error) {
         console.log(error);
       }
@@ -80,12 +80,23 @@ function App() {
     for (const existingCourier of couriers) {
       if (
         existingCourier.courier === newCourier.courier &&
-        existingCourier.startdate === newCourier.startDate &&
-        existingCourier.enddate === newCourier.endDate &&
+        ((existingCourier.startdate <= newCourier.startDate &&
+          newCourier.startDate < existingCourier.enddate) ||
+          (newCourier.startDate <= existingCourier.startdate &&
+            existingCourier.startdate < newCourier.endDate)) &&
         ((existingCourier.starttime <= newCourier.startTime &&
           newCourier.startTime < existingCourier.endtime) ||
           (newCourier.startTime <= existingCourier.starttime &&
             existingCourier.starttime < newCourier.endTime))
+        
+
+        // existingCourier.courier === newCourier.courier &&
+        // existingCourier.startdate === newCourier.startDate &&
+        // existingCourier.enddate === newCourier.endDate &&
+        // ((existingCourier.starttime <= newCourier.startTime &&
+        //   newCourier.startTime < existingCourier.endtime) ||
+        //   (newCourier.startTime <= existingCourier.starttime &&
+        //     existingCourier.starttime < newCourier.endTime))
       ) {
         // If there's an overlap, return false
         return false;
